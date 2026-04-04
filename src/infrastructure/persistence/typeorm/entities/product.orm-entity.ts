@@ -8,7 +8,7 @@ export class ProductOrmEntity {
   @Column()
   name!: string;
 
-  @Column({ nullable: true })
+  @Column('text', { nullable: true })
   description!: string | null;
 
   @Column('decimal', { precision: 10, scale: 2 })
