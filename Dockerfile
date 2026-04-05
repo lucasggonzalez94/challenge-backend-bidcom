@@ -24,8 +24,6 @@ RUN npm ci --only=production && npm cache clean --force
 
 COPY --from=builder /app/dist ./dist
 
-RUN mkdir -p /app/data && chown -R node:node /app
-
 USER node
 
 EXPOSE 3000
