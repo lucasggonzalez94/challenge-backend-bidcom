@@ -354,5 +354,27 @@ describe('ProductsController (e2e)', () => {
 
       expect(response.body.code).toBe('P0001');
     });
+
+    it('should return 409 when trying to delete product with stock', async () => {
+      const createResponse = await request(app.getHttpServer())
+        .post('/products')
+        .send({
+          name: 'Product With Stock',
+          price: 100,
+          stock: 10,
+          category: 'Cat',
+          brand: 'Brand',
+        })
+        .expect(201);
+
+      const productId = createResponse.body.id;
+
+      const response = await request(app.getHttpServer())
+        .delete(`/products/${productId}`)
+        .expect(409);
+
+      expect(response.body.code).toBe('P0002');
+      expect(response.body.error).toContain('10 items in stock');
+    });
   });
 });

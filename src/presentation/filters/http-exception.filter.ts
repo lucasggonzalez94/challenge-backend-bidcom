@@ -9,6 +9,7 @@ import type { Request, Response } from 'express';
 import {
   DomainException,
   ProductNotFoundException,
+  CannotDeleteProductWithStockException,
 } from '../../domain/exceptions/domain.exceptions.js';
 import { TRACE_ID_HEADER } from '../interceptors/trace-id.interceptor.js';
 
@@ -31,6 +32,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     if (exception instanceof ProductNotFoundException) {
       status = HttpStatus.NOT_FOUND;
+      errorResponse = {
+        error: exception.message,
+        code: exception.code,
+        traceId,
+      };
+    } else if (exception instanceof CannotDeleteProductWithStockException) {
+      status = HttpStatus.CONFLICT;
       errorResponse = {
         error: exception.message,
         code: exception.code,
